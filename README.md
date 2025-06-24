@@ -35,5 +35,5 @@ pnpm install
 2 - Start the dvelopment server:
 
 ```bash
-npm run dev
+pnpm dev
 ```
