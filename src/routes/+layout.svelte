@@ -6,6 +6,12 @@
   let { data, children }: LayoutProps = $props()
   
   let isNavigating = $derived(navigating !== null && navigating?.to !== null)
+
+  let form: HTMLFormElement | null = null;
+
+  let hasSearch = $derived(page.url.searchParams.has('q'));
+
+  let isSearching = $derived(isNavigating && hasSearch);
 </script>
 
 
@@ -13,9 +19,17 @@
   <h1>Sveltekit Contacts</h1>
 
   <div>
-    <form id="searc-form" role="search">
-      <input id="q" aria-label="Search contacts" placeholder="Search" type="search" name="q">
-      <div id="search-spinner" aria-hidden="true" hidden={true}></div>
+    <form bind:this={form} id="searc-form" role="search" data-sveltekit-keepfocus>
+      <input 
+        oninput={() => form?.requestSubmit()} 
+        id="q" 
+        aria-label="Search contacts" 
+        placeholder="Search" 
+        type="search" name="q"
+        class={[isSearching ? 'loading' : '']}
+        value={data.q || ''}
+      >
+      <div id="search-spinner" aria-hidden="true" hidden={!isSearching}></div>
     </form>
 
     <form method="post" action="/?/create" use:enhance>

@@ -2,10 +2,17 @@ import { storage } from './database';
 import type { Contact } from './types';
 
 
-export const getContacts = async () => {
+export const getContacts = async (q?: string) => {
   await new Promise((resolve) => setTimeout(resolve, 500));
 
   const contacts = await storage.getItem('contacts:data') as Contact[] ?? []
+  
+  if(q) {
+    return contacts
+      .filter(contact => 
+            contact?.first?.toLowerCase().includes(q.toLowerCase()) || contact?.last?.toLowerCase().includes(q.toLowerCase())
+      )
+  }
 
   return contacts
 }
@@ -25,7 +32,7 @@ export const createContract = async(contact: Contact) => {
   
   const contacts = await storage.getItem('contacts:data') as Contact[] ?? []
 
-  const newContact = {...contact, id}
+  const newContact = {...contact, id, favorite: false}
 
   await storage.setItem('contacts:data', [...contacts, newContact])
 

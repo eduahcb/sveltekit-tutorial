@@ -1,16 +1,20 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import type { Contact } from '$lib/server/types';
-
   import type { PageProps } from './$types';
 
   let { data }: PageProps = $props();
+
+  let favorite = $derived(data.contact.favorite)
 </script>
 
-{#snippet favoriteComponent(contact: Contact)}
-  {@const favorite = contact.favorite}
-
-  <form method="post" action="?/favorite">
+{#snippet favoriteComponent()}
+  <form method="post" action="?/favorite" use:enhance={({ formData }) => {
+      favorite = formData.get('favorite') === "true"
+      
+      return async ({ update }) => {
+        await update()
+      }
+    }}>
     <button
       aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
       name="favorite"
@@ -24,7 +28,7 @@
 
 <div id="contact">
   <div>
-    <img src={data.contact.avatar} alt={`${data.contact.first} ${data.contact.last} avatar`}>
+    <img src={data.contact.avatar || 'https://placehold.co/200'} alt={`${data.contact.first} ${data.contact.last} avatar`}>
   </div>
 
   <div>
@@ -35,7 +39,7 @@
         <i>No Name</i>
       {/if}
 
-      {@render favoriteComponent(data.contact)}
+      {@render favoriteComponent()}
     </h1>
 
     {#if data.contact.twitter}

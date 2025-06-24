@@ -16,7 +16,6 @@ export const load: PageServerLoad = async ({ params }) => {
   return { contact }
 }
 
-
 export const actions: Actions = {
   edit: async ({ request, params }) => {
     const id = params.id

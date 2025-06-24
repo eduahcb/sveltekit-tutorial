@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types';
 
-import { getContact, deleteContact } from '$lib/server/api'
+import { getContact, deleteContact, updateContact } from '$lib/server/api'
 
 export const load: PageServerLoad = async ({ params }) => {
   const id = params.id
@@ -22,6 +22,15 @@ export const actions: Actions = {
     await deleteContact(id);
 
     redirect(303, '/');
+  },
+  favorite: async({ request, params }) => {
+    const id = params.id
+
+    const formData = await request.formData();
+
+    const favorite = formData.get('favorite') === "true"
+
+    await updateContact(id, { favorite });
   }
 } satisfies Actions;
 

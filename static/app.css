@@ -386,8 +386,10 @@ i {
 
 #index-page:before {
   display: block;
-  margin-bottom: 0.5rem;
-  content: url("");
+  margin: 1rem auto;
+  content: url('/icon.svg');
+  width: 60px;
+  height: 60px;
 }
 
 #error-page {
